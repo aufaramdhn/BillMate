@@ -1,0 +1,45 @@
+# Local project planning docs (do not push)
+branching-workflow.md
+sprint-task-checklist.md
+
+# Potentially sensitive local config
+.github/
+.vscode/
+.idea/
+
+# Environment secrets
+.env
+.env.*
+!.env.example
+
+# Flutter / Dart generated
+.dart_tool/
+.packages
+.flutter-plugins
+.flutter-plugins-dependencies
+.pub-cache/
+.pub/
+build/
+
+# Platform-specific generated
+android/.gradle/
+android/local.properties
+ios/Flutter/ephemeral/
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+macos/Flutter/ephemeral/
+linux/flutter/ephemeral/
+windows/flutter/ephemeral/
+
+# Signing and credentials
+*.jks
+*.keystore
+key.properties
+android/key.properties
+android/app/upload-keystore.jks
+
+# Firebase / service credentials
+android/app/google-services.json
+ios/Runner/GoogleService-Info.plist
+macos/Runner/GoogleService-Info.plist
+lib/firebase_options.dart
