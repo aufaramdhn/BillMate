@@ -1,6 +1,8 @@
 # Local project planning docs (do not push)
 branching-workflow.md
 sprint-task-checklist.md
+billmate-roadmap.md
+billmate-sdlc.md
 
 # Potentially sensitive local config
 .github/
