@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'data/services/onesignal_service.dart';
 import 'data/services/supabase_service.dart';
 import 'presentation/screens/auth_email_password_screen.dart';
 import 'presentation/screens/authenticated_home_screen.dart';
@@ -14,6 +15,7 @@ Future<void> main() async {
     // Keep app startup alive so users can still reach fallback UI.
     debugPrint('dotenv load skipped: $error');
   }
+  await OneSignalService.initialize();
   await SupabaseService.initialize();
 
   runApp(const BillMateApp());

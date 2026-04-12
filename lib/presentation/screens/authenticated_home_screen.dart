@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../data/services/auth_service.dart';
+import '../../data/services/user_profile_service.dart';
 
 class AuthenticatedHomeScreen extends StatefulWidget {
   const AuthenticatedHomeScreen({
@@ -18,6 +19,12 @@ class AuthenticatedHomeScreen extends StatefulWidget {
 
 class _AuthenticatedHomeScreenState extends State<AuthenticatedHomeScreen> {
   bool _isSigningOut = false;
+
+  @override
+  void initState() {
+    super.initState();
+    UserProfileService.syncOneSignalPlayerId(widget.user.id);
+  }
 
   Future<void> _signOut() async {
     setState(() {
