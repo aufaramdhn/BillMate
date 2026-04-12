@@ -8,7 +8,12 @@ import 'presentation/screens/authenticated_home_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: '.env');
+  try {
+    await dotenv.load(fileName: '.env');
+  } catch (error) {
+    // Keep app startup alive so users can still reach fallback UI.
+    debugPrint('dotenv load skipped: $error');
+  }
   await SupabaseService.initialize();
 
   runApp(const BillMateApp());
@@ -23,7 +28,29 @@ class BillMateApp extends StatelessWidget {
       title: 'BillMate',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF5B6AF0)),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color(0xFF3C4BD1),
+          surface: const Color(0xFFF9F5FF),
+        ),
+        scaffoldBackgroundColor: const Color(0xFFF9F5FF),
+        inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(18),
+          ),
+        ),
+        filledButtonTheme: FilledButtonThemeData(
+          style: FilledButton.styleFrom(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(999),
+            ),
+            minimumSize: const Size.fromHeight(52),
+          ),
+        ),
+        cardTheme: CardThemeData(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(28),
+          ),
+        ),
         useMaterial3: true,
       ),
       home: const _AppHome(),
