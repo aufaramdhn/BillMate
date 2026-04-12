@@ -10,9 +10,12 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:billmate/main.dart';
 
 void main() {
-  testWidgets('BillMate app renders foundation text', (WidgetTester tester) async {
+  testWidgets('BillMate app shows missing config message', (WidgetTester tester) async {
     await tester.pumpWidget(const BillMateApp());
 
-    expect(find.text('BillMate - Sprint 1 Foundation'), findsOneWidget);
+    expect(
+      find.text('Supabase configuration missing. Update .env before using auth.'),
+      findsOneWidget,
+    );
   });
 }
