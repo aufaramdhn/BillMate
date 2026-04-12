@@ -436,7 +436,6 @@ class _AuthEmailPasswordScreenState extends State<AuthEmailPasswordScreen> {
                                 icon: const Icon(Icons.g_mobiledata_rounded),
                                 label: const Text('Masuk dengan Google'),
                                 style: OutlinedButton.styleFrom(
-                                  foregroundColor: _onSurface,
                                   foregroundColor: onSurface,
                                   side: BorderSide(
                                     color: _brandPrimary.withOpacity(0.24),

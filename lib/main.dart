@@ -27,7 +27,7 @@ class BillMateApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return MaterialApp.router(
       routerConfig: _router,
       title: 'BillMate',
       debugShowCheckedModeBanner: false,
