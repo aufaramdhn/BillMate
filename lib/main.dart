@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'config/app_router.dart';
+import 'config/app_theme.dart';
 import 'data/services/onesignal_service.dart';
 import 'data/services/supabase_service.dart';
 
@@ -30,32 +31,9 @@ class BillMateApp extends StatelessWidget {
       routerConfig: _router,
       title: 'BillMate',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF3C4BD1),
-          surface: const Color(0xFFF9F5FF),
-        ),
-        scaffoldBackgroundColor: const Color(0xFFF9F5FF),
-        inputDecorationTheme: InputDecorationTheme(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(18),
-          ),
-        ),
-        filledButtonTheme: FilledButtonThemeData(
-          style: FilledButton.styleFrom(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(999),
-            ),
-            minimumSize: const Size.fromHeight(52),
-          ),
-        ),
-        cardTheme: CardThemeData(
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(28),
-          ),
-        ),
-        useMaterial3: true,
-      ),
+      theme: AppTheme.lightTheme(),
+      darkTheme: AppTheme.darkTheme(),
+      themeMode: ThemeMode.system,
     );
   }
 }

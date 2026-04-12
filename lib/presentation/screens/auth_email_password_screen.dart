@@ -13,10 +13,14 @@ class AuthEmailPasswordScreen extends StatefulWidget {
 class _AuthEmailPasswordScreenState extends State<AuthEmailPasswordScreen> {
   static const _brandPrimary = Color(0xFF3C4BD1);
   static const _brandPrimaryContainer = Color(0xFF8D98FF);
-  static const _surfaceBase = Color(0xFFF9F5FF);
-  static const _surfaceLayer = Color(0xFFF3EEFF);
-  static const _fieldFill = Color(0xFFECE8FC);
-  static const _onSurface = Color(0xFF2E2A50);
+  static const _lightSurfaceBase = Color(0xFFF9F5FF);
+  static const _lightSurfaceLayer = Color(0xFFF3EEFF);
+  static const _lightFieldFill = Color(0xFFECE8FC);
+  static const _lightOnSurface = Color(0xFF2E2A50);
+  static const _darkSurfaceBase = Color(0xFF0D072E);
+  static const _darkSurfaceLayer = Color(0xFF17103B);
+  static const _darkFieldFill = Color(0xFF231A4F);
+  static const _darkOnSurface = Color(0xFFD9D4FF);
 
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
@@ -198,6 +202,11 @@ class _AuthEmailPasswordScreenState extends State<AuthEmailPasswordScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+    final surfaceBase = isDark ? _darkSurfaceBase : _lightSurfaceBase;
+    final surfaceLayer = isDark ? _darkSurfaceLayer : _lightSurfaceLayer;
+    final fieldFill = isDark ? _darkFieldFill : _lightFieldFill;
+    final onSurface = isDark ? _darkOnSurface : _lightOnSurface;
     final title = _isSignUpMode ? 'Daftar Akun' : 'Selamat Datang Kembali';
     final subtitle = _isSignUpMode
       ? 'Buat akun untuk mulai mengelola tagihan bulanan Anda.'
@@ -208,7 +217,7 @@ class _AuthEmailPasswordScreenState extends State<AuthEmailPasswordScreen> {
       : 'Belum punya akun? Daftar Sekarang';
 
     return Scaffold(
-      backgroundColor: _surfaceBase,
+      backgroundColor: surfaceBase,
       body: Stack(
         children: [
           Positioned(
@@ -216,7 +225,7 @@ class _AuthEmailPasswordScreenState extends State<AuthEmailPasswordScreen> {
             right: -90,
             child: _ToneBlob(
               size: 280,
-              color: _brandPrimaryContainer.withOpacity(0.40),
+              color: _brandPrimaryContainer.withOpacity(isDark ? 0.22 : 0.40),
             ),
           ),
           Positioned(
@@ -224,7 +233,7 @@ class _AuthEmailPasswordScreenState extends State<AuthEmailPasswordScreen> {
             left: -70,
             child: _ToneBlob(
               size: 180,
-              color: _brandPrimaryContainer.withOpacity(0.22),
+              color: _brandPrimary.withOpacity(isDark ? 0.25 : 0.14),
             ),
           ),
           SafeArea(
@@ -272,7 +281,7 @@ class _AuthEmailPasswordScreenState extends State<AuthEmailPasswordScreen> {
                       Text(
                         title,
                         style: theme.textTheme.headlineSmall?.copyWith(
-                          color: _onSurface,
+                          color: onSurface,
                           fontWeight: FontWeight.w800,
                           height: 1.15,
                         ),
@@ -281,21 +290,23 @@ class _AuthEmailPasswordScreenState extends State<AuthEmailPasswordScreen> {
                       Text(
                         subtitle,
                         style: theme.textTheme.bodyMedium?.copyWith(
-                          color: _onSurface.withOpacity(0.72),
+                          color: onSurface.withOpacity(0.72),
                           height: 1.35,
                         ),
                       ),
                       const SizedBox(height: 20),
                       Container(
                         decoration: BoxDecoration(
-                          color: _surfaceLayer.withOpacity(0.92),
+                          color: surfaceLayer.withOpacity(isDark ? 0.94 : 0.92),
                           borderRadius: BorderRadius.circular(32),
                           border: Border.all(
-                            color: Colors.white.withOpacity(0.72),
+                            color: isDark
+                                ? Colors.white.withOpacity(0.08)
+                                : Colors.white.withOpacity(0.72),
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: _onSurface.withOpacity(0.06),
+                              color: onSurface.withOpacity(isDark ? 0.22 : 0.06),
                               blurRadius: 40,
                               offset: const Offset(0, 20),
                             ),
@@ -311,7 +322,7 @@ class _AuthEmailPasswordScreenState extends State<AuthEmailPasswordScreen> {
                                 _isSignUpMode ? 'Daftar' : 'Login',
                                 textAlign: TextAlign.center,
                                 style: theme.textTheme.headlineSmall?.copyWith(
-                                  color: _onSurface,
+                                  color: onSurface,
                                   fontWeight: FontWeight.w700,
                                 ),
                               ),
@@ -405,7 +416,7 @@ class _AuthEmailPasswordScreenState extends State<AuthEmailPasswordScreen> {
                                     child: Text(
                                       'ATAU',
                                       style: theme.textTheme.labelSmall?.copyWith(
-                                        color: _onSurface.withOpacity(0.55),
+                                        color: onSurface.withOpacity(0.55),
                                         fontWeight: FontWeight.w700,
                                         letterSpacing: 0.8,
                                       ),
@@ -426,11 +437,14 @@ class _AuthEmailPasswordScreenState extends State<AuthEmailPasswordScreen> {
                                 label: const Text('Masuk dengan Google'),
                                 style: OutlinedButton.styleFrom(
                                   foregroundColor: _onSurface,
+                                  foregroundColor: onSurface,
                                   side: BorderSide(
                                     color: _brandPrimary.withOpacity(0.24),
                                   ),
                                   minimumSize: const Size.fromHeight(52),
-                                  backgroundColor: Colors.white.withOpacity(0.60),
+                                  backgroundColor: isDark
+                                      ? Colors.white.withOpacity(0.06)
+                                      : Colors.white.withOpacity(0.60),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(999),
                                   ),
@@ -461,10 +475,12 @@ class _AuthEmailPasswordScreenState extends State<AuthEmailPasswordScreen> {
     IconData? prefixIcon,
     IconData? suffixIcon,
   }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final fieldFill = isDark ? _darkFieldFill : _lightFieldFill;
     return InputDecoration(
       hintText: label,
       filled: true,
-      fillColor: _fieldFill,
+      fillColor: fieldFill,
       prefixIcon: prefixIcon == null
           ? null
           : Icon(prefixIcon, color: _brandPrimary.withOpacity(0.60), size: 19),
