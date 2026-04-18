@@ -22,12 +22,12 @@ Saat pindah chat, lanjutkan dari task unchecked tertinggi pada sprint aktif dan 
 - [x] `S2-T01` Buat tabel `bills` + aktifkan RLS
 - [x] `S2-T02` Implementasi `BillModel` + mapping entity
 - [x] `S2-T03` Implementasi CRUD bills di repository
-- [ ] `S2-T04` Implementasi `BillsBloc` (load/add/edit/delete)
-- [ ] `S2-T05` Implementasi screen Dashboard
-- [ ] `S2-T06` Implementasi screen Tambah Tagihan
-- [ ] `S2-T07` Implementasi screen Detail Tagihan
-- [ ] `S2-T08` Implementasi filter/sort (due date, kategori, status)
-- [ ] `S2-T09` Implementasi aksi tandai lunas
+- [x] `S2-T04` Implementasi `BillsBloc` (load/add/edit/delete)
+- [x] `S2-T05` Implementasi screen Dashboard
+- [x] `S2-T06` Implementasi screen Tambah Tagihan
+- [x] `S2-T07` Implementasi screen Detail Tagihan
+- [x] `S2-T08` Implementasi filter/sort (due date, kategori, status)
+- [x] `S2-T09` Implementasi aksi tandai lunas
 - [ ] `S2-T10` Widget test untuk add form + bill card
 
 ## Sprint 3 - Notifikasi + Offline (`sprint/s3-notification-offline`)
