@@ -7,7 +7,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
 void main() {
-  testWidgets('S2-T10 add form renders fields and submit button', (WidgetTester tester) async {
+  testWidgets('S2-T10 add form renders fields and submit button',
+      (WidgetTester tester) async {
     final bloc = BillsBloc(InMemoryBillsRepository());
 
     await tester.pumpWidget(
@@ -26,7 +27,8 @@ void main() {
     expect(find.text('Simpan Tagihan'), findsOneWidget);
   });
 
-  testWidgets('S2-T10 bill card renders content and actions', (WidgetTester tester) async {
+  testWidgets('S2-T10 bill card renders content and actions',
+      (WidgetTester tester) async {
     final bill = BillEntity(
       id: 'bill-1',
       userId: 'user-1',
