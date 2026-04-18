@@ -81,7 +81,7 @@ class _AddBillScreenState extends State<AddBillScreen> {
             const SizedBox(height: 12),
             DropdownButtonFormField<BillCategory>(
               key: const Key('add_bill_category_field'),
-              value: _selectedCategory,
+              initialValue: _selectedCategory,
               decoration: const InputDecoration(labelText: 'Kategori'),
               items: BillCategory.values
                   .map(
@@ -121,7 +121,7 @@ class _AddBillScreenState extends State<AddBillScreen> {
             ),
             if (_isRecurring)
               DropdownButtonFormField<RecurrenceInterval>(
-                value: _selectedRecurrence,
+                initialValue: _selectedRecurrence,
                 decoration: const InputDecoration(labelText: 'Interval ulang'),
                 items: RecurrenceInterval.values
                     .map(

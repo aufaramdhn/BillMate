@@ -28,7 +28,7 @@ Saat pindah chat, lanjutkan dari task unchecked tertinggi pada sprint aktif dan 
 - [x] `S2-T07` Implementasi screen Detail Tagihan
 - [x] `S2-T08` Implementasi filter/sort (due date, kategori, status)
 - [x] `S2-T09` Implementasi aksi tandai lunas
-- [ ] `S2-T10` Widget test untuk add form + bill card
+- [x] `S2-T10` Widget test untuk add form + bill card
 
 ## Sprint 3 - Notifikasi + Offline (`sprint/s3-notification-offline`)
 

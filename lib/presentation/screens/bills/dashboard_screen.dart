@@ -53,7 +53,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       children: <Widget>[
                         Expanded(
                           child: DropdownButtonFormField<BillCategory?>(
-                            value: state.selectedCategory,
+                            initialValue: state.selectedCategory,
                             decoration: const InputDecoration(
                               labelText: 'Kategori',
                             ),
@@ -75,7 +75,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: DropdownButtonFormField<BillPaymentFilter>(
-                            value: state.paymentFilter,
+                            initialValue: state.paymentFilter,
                             decoration: const InputDecoration(
                               labelText: 'Status',
                             ),
@@ -98,7 +98,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     ),
                     const SizedBox(height: 12),
                     DropdownButtonFormField<BillSortOption>(
-                      value: state.sortOption,
+                      initialValue: state.sortOption,
                       decoration: const InputDecoration(labelText: 'Urutkan'),
                       items: BillSortOption.values
                           .map(
