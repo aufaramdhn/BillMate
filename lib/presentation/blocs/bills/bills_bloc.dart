@@ -1,5 +1,10 @@
 import 'package:flutter/foundation.dart';
 
+import '../../../data/models/bill_model.dart';
+import '../../../data/services/notification_log_service.dart';
+import '../../../data/services/notification_service.dart';
+import '../../../data/services/offline_bills_cache_service.dart';
+import '../../../data/services/offline_sync_service.dart';
 import '../../../domain/entities/bill_entity.dart';
 import '../../../domain/repositories/bills_repository.dart';
 
@@ -63,9 +68,30 @@ class BillsState {
 }
 
 class BillsBloc extends ChangeNotifier {
-  BillsBloc(this._repository);
+  BillsBloc(
+    this._repository, {
+    bool Function()? isOnline,
+    OfflineSyncService? offlineSyncService,
+  Future<List<BillReminderSchedule>> Function(BillEntity bill)?
+    scheduleReminders,
+  Future<List<BillReminderSchedule>> Function(BillEntity bill)?
+    rescheduleReminders,
+  Future<void> Function(String billId)? cancelReminders,
+  })  : _isOnline = isOnline ?? _alwaysOnline,
+    _offlineSyncService = offlineSyncService ?? OfflineSyncService(_repository),
+    _scheduleReminders = scheduleReminders ?? _defaultScheduleReminders,
+    _rescheduleReminders =
+      rescheduleReminders ?? _defaultRescheduleReminders,
+    _cancelReminders = cancelReminders ?? _defaultCancelReminders;
 
   final BillsRepository _repository;
+  final bool Function() _isOnline;
+  final OfflineSyncService _offlineSyncService;
+    final Future<List<BillReminderSchedule>> Function(BillEntity bill)
+      _scheduleReminders;
+    final Future<List<BillReminderSchedule>> Function(BillEntity bill)
+      _rescheduleReminders;
+    final Future<void> Function(String billId) _cancelReminders;
 
   BillsState _state = BillsState.initial();
   BillsState get state => _state;
@@ -73,6 +99,10 @@ class BillsBloc extends ChangeNotifier {
   Future<void> loadBills() async {
     _setState(_state.copyWith(isLoading: true, clearErrorMessage: true));
     try {
+      if (_isOnline()) {
+        await _offlineSyncService.syncPendingOperations();
+      }
+
       final bills = await _repository.getBills();
       _setState(
         _state.copyWith(
@@ -81,14 +111,133 @@ class BillsBloc extends ChangeNotifier {
           clearErrorMessage: true,
         ),
       );
+      for (final bill in bills) {
+        await OfflineBillsCacheService.upsertCachedBill(bill);
+      }
       _applyView();
     } catch (error) {
+      final cachedBills = await OfflineBillsCacheService.getCachedBills();
       _setState(
         _state.copyWith(
+          allBills: cachedBills,
           isLoading: false,
-          errorMessage: 'Gagal memuat tagihan: $error',
+          errorMessage: 'Mode offline aktif. Menampilkan data cache.',
         ),
       );
+      _applyView();
+    }
+  }
+
+  Future<void> _scheduleNewBillReminders(BillEntity bill) async {
+    final schedules = await _scheduleReminders(bill);
+    NotificationLogService.recordScheduled(bill, schedules);
+  }
+
+  Future<void> _rescheduleBillReminders(BillEntity bill) async {
+    final schedules = await _rescheduleReminders(bill);
+    NotificationLogService.recordScheduled(bill, schedules);
+  }
+
+  Future<void> _cancelBillReminders(String billId) async {
+    await _cancelReminders(billId);
+    NotificationLogService.recordCancelled(billId);
+  }
+
+  Future<void> _enqueueOfflineCreate(BillEntity bill) async {
+    await OfflineBillsCacheService.enqueueOperation(
+      OfflineOperation(
+        type: OfflineOperationType.create,
+        billId: bill.id,
+        createdAt: DateTime.now(),
+        payload: BillModel.fromEntity(bill).toJson(),
+      ),
+    );
+  }
+
+  Future<void> _enqueueOfflineUpdate(BillEntity bill) async {
+    await OfflineBillsCacheService.enqueueOperation(
+      OfflineOperation(
+        type: OfflineOperationType.update,
+        billId: bill.id,
+        createdAt: DateTime.now(),
+        payload: BillModel.fromEntity(bill).toJson(),
+      ),
+    );
+  }
+
+  Future<void> _enqueueOfflineDelete(String billId) async {
+    await OfflineBillsCacheService.enqueueOperation(
+      OfflineOperation(
+        type: OfflineOperationType.delete,
+        billId: billId,
+        createdAt: DateTime.now(),
+      ),
+    );
+  }
+
+  Future<void> _enqueueOfflineMarkPaid(String billId) async {
+    await OfflineBillsCacheService.enqueueOperation(
+      OfflineOperation(
+        type: OfflineOperationType.markPaid,
+        billId: billId,
+        createdAt: DateTime.now(),
+      ),
+    );
+  }
+
+  static bool _alwaysOnline() {
+    return true;
+  }
+
+  static Future<List<BillReminderSchedule>> _defaultScheduleReminders(
+    BillEntity bill,
+  ) {
+    return NotificationService.scheduleBillReminders(bill);
+  }
+
+  static Future<List<BillReminderSchedule>> _defaultRescheduleReminders(
+    BillEntity bill,
+  ) {
+    return NotificationService.rescheduleBillReminders(bill);
+  }
+
+  static Future<void> _defaultCancelReminders(String billId) {
+    return NotificationService.cancelBillReminders(billId);
+  }
+
+  Future<void> _saveBillToLocalState(BillEntity bill) async {
+    final nextBills = List<BillEntity>.from(_state.allBills)
+      ..removeWhere((item) => item.id == bill.id)
+      ..add(bill);
+    _setState(_state.copyWith(allBills: nextBills));
+    _applyView();
+    await OfflineBillsCacheService.upsertCachedBill(bill);
+  }
+
+  Future<void> _removeBillFromLocalState(String billId) async {
+    final nextBills = List<BillEntity>.from(_state.allBills)
+      ..removeWhere((item) => item.id == billId);
+    _setState(_state.copyWith(allBills: nextBills));
+    _applyView();
+    await OfflineBillsCacheService.removeCachedBill(billId);
+  }
+
+  Future<void> _replaceBillInLocalState(BillEntity bill) async {
+    final nextBills = List<BillEntity>.from(_state.allBills);
+    final index = nextBills.indexWhere((item) => item.id == bill.id);
+    if (index >= 0) {
+      nextBills[index] = bill;
+    } else {
+      nextBills.add(bill);
+    }
+    _setState(_state.copyWith(allBills: nextBills));
+    _applyView();
+    await OfflineBillsCacheService.upsertCachedBill(bill);
+  }
+
+  Future<void> _syncIfOnline() async {
+    if (_isOnline()) {
+      await _offlineSyncService.syncPendingOperations();
     }
   }
 
@@ -120,18 +269,35 @@ class BillsBloc extends ChangeNotifier {
 
     try {
       await _repository.createBill(bill);
-      await loadBills();
+      await _scheduleNewBillReminders(bill);
+      await _saveBillToLocalState(bill);
+
+      if (_isOnline()) {
+        await _syncIfOnline();
+        await loadBills();
+      } else {
+        await _enqueueOfflineCreate(bill);
+      }
     } catch (error) {
-      _setState(_state.copyWith(errorMessage: 'Gagal menambah tagihan: $error'));
+      _setState(
+        _state.copyWith(errorMessage: 'Gagal menambah tagihan: $error'),
+      );
     }
   }
 
   Future<void> updateBill(BillEntity bill) async {
+    final updatedBill = bill.copyWith(updatedAt: DateTime.now());
     try {
-      await _repository.updateBill(
-        bill.copyWith(updatedAt: DateTime.now()),
-      );
-      await loadBills();
+      await _repository.updateBill(updatedBill);
+      await _rescheduleBillReminders(updatedBill);
+      await _replaceBillInLocalState(updatedBill);
+
+      if (_isOnline()) {
+        await _syncIfOnline();
+        await loadBills();
+      } else {
+        await _enqueueOfflineUpdate(updatedBill);
+      }
     } catch (error) {
       _setState(_state.copyWith(errorMessage: 'Gagal mengubah tagihan: $error'));
     }
@@ -140,7 +306,15 @@ class BillsBloc extends ChangeNotifier {
   Future<void> deleteBill(String billId) async {
     try {
       await _repository.deleteBill(billId);
-      await loadBills();
+      await _cancelBillReminders(billId);
+      await _removeBillFromLocalState(billId);
+
+      if (_isOnline()) {
+        await _syncIfOnline();
+        await loadBills();
+      } else {
+        await _enqueueOfflineDelete(billId);
+      }
     } catch (error) {
       _setState(_state.copyWith(errorMessage: 'Gagal menghapus tagihan: $error'));
     }
@@ -148,8 +322,16 @@ class BillsBloc extends ChangeNotifier {
 
   Future<void> markAsPaid(String billId) async {
     try {
-      await _repository.markBillAsPaid(billId);
-      await loadBills();
+      final updatedBill = await _repository.markBillAsPaid(billId);
+      await _cancelBillReminders(billId);
+      await _replaceBillInLocalState(updatedBill);
+
+      if (_isOnline()) {
+        await _syncIfOnline();
+        await loadBills();
+      } else {
+        await _enqueueOfflineMarkPaid(billId);
+      }
     } catch (error) {
       _setState(_state.copyWith(errorMessage: 'Gagal menandai lunas: $error'));
     }

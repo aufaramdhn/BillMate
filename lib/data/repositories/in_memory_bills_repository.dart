@@ -11,7 +11,12 @@ class InMemoryBillsRepository implements BillsRepository {
 
   @override
   Future<BillEntity> createBill(BillEntity bill) async {
-    _items.add(bill);
+    final index = _items.indexWhere((item) => item.id == bill.id);
+    if (index >= 0) {
+      _items[index] = bill;
+    } else {
+      _items.add(bill);
+    }
     return bill;
   }
 

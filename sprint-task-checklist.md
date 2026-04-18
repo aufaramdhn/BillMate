@@ -33,15 +33,15 @@ Saat pindah chat, lanjutkan dari task unchecked tertinggi pada sprint aktif dan 
 ## Sprint 3 - Notifikasi + Offline (`sprint/s3-notification-offline`)
 
 - [x] `S3-T01` Integrasi `flutter_local_notifications` + timezone
-- [ ] `S3-T02` Jadwalkan notifikasi H-3, H-1, H-0 saat bill dibuat
-- [ ] `S3-T03` Reschedule notifikasi saat bill diubah
-- [ ] `S3-T04` Cancel notifikasi saat bill lunas/dihapus
-- [ ] `S3-T05` Setup Hive box untuk cache bill offline
-- [ ] `S3-T06` Implementasi strategi sync Hive -> Supabase saat online
-- [ ] `S3-T07` Tambah `notifications_log` untuk audit jadwal/kirim
-- [ ] `S3-T08` Unit test NotificationService
-- [ ] `S3-T09` Integration test mode offline tambah tagihan
-- [ ] `S3-T10` Validasi notifikasi muncul tepat waktu pada device test
+- [x] `S3-T02` Jadwalkan notifikasi H-3, H-1, H-0 saat bill dibuat
+- [x] `S3-T03` Reschedule notifikasi saat bill diubah
+- [x] `S3-T04` Cancel notifikasi saat bill lunas/dihapus
+- [x] `S3-T05` Setup Hive box untuk cache bill offline
+- [x] `S3-T06` Implementasi strategi sync Hive -> Supabase saat online
+- [x] `S3-T07` Tambah `notifications_log` untuk audit jadwal/kirim
+- [x] `S3-T08` Unit test NotificationService
+- [x] `S3-T09` Integration test mode offline tambah tagihan
+- [x] `S3-T10` Validasi notifikasi muncul tepat waktu pada device test
 
 ## Sprint 4 - Rekap + Split Bill (`sprint/s4-recap-split`)
 
