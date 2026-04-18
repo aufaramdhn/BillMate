@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'config/app_config.dart';
 import 'data/repositories/in_memory_bills_repository.dart';
+import 'data/services/notification_service.dart';
 import 'data/services/supabase_service.dart';
 import 'presentation/blocs/bills/bills_bloc.dart';
 import 'presentation/screens/bills/dashboard_screen.dart';
@@ -10,6 +11,7 @@ import 'presentation/screens/bills/dashboard_screen.dart';
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await dotenv.load(fileName: '.env');
+  await NotificationService.initialize();
   await SupabaseService.initialize();
 
   final repository = InMemoryBillsRepository();

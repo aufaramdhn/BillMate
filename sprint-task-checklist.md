@@ -32,7 +32,7 @@ Saat pindah chat, lanjutkan dari task unchecked tertinggi pada sprint aktif dan 
 
 ## Sprint 3 - Notifikasi + Offline (`sprint/s3-notification-offline`)
 
-- [ ] `S3-T01` Integrasi `flutter_local_notifications` + timezone
+- [x] `S3-T01` Integrasi `flutter_local_notifications` + timezone
 - [ ] `S3-T02` Jadwalkan notifikasi H-3, H-1, H-0 saat bill dibuat
 - [ ] `S3-T03` Reschedule notifikasi saat bill diubah
 - [ ] `S3-T04` Cancel notifikasi saat bill lunas/dihapus
