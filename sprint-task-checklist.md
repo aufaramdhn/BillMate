@@ -45,16 +45,16 @@ Saat pindah chat, lanjutkan dari task unchecked tertinggi pada sprint aktif dan 
 
 ## Sprint 4 - Rekap + Split Bill (`sprint/s4-recap-split`)
 
-- [ ] `S4-T01` Implementasi query agregasi rekap bulanan
-- [ ] `S4-T02` Implementasi screen Rekap + grafik `fl_chart`
-- [ ] `S4-T03` Tambahkan tabel `split_groups` + `split_members` + RLS
-- [ ] `S4-T04` Implementasi repository split group dan split member
-- [ ] `S4-T05` Implementasi screen Split List
-- [ ] `S4-T06` Implementasi screen Detail Split
-- [ ] `S4-T07` Implementasi screen Buat Grup Split
-- [ ] `S4-T08` Integrasi OneSignal push reminder ke anggota
-- [ ] `S4-T09` Implementasi status bayar anggota split
-- [ ] `S4-T10` Integration test end-to-end split bill flow
+- [x] `S4-T01` Implementasi query agregasi rekap bulanan
+- [x] `S4-T02` Implementasi screen Rekap + grafik `fl_chart`
+- [x] `S4-T03` Tambahkan tabel `split_groups` + `split_members` + RLS
+- [x] `S4-T04` Implementasi repository split group dan split member
+- [x] `S4-T05` Implementasi screen Split List
+- [x] `S4-T06` Implementasi screen Detail Split
+- [x] `S4-T07` Implementasi screen Buat Grup Split
+- [x] `S4-T08` Integrasi OneSignal push reminder ke anggota
+- [x] `S4-T09` Implementasi status bayar anggota split
+- [x] `S4-T10` Integration test end-to-end split bill flow
 
 ## Release Gate (wajib sebelum merge ke `main`)
 
